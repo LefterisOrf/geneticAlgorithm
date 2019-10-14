@@ -1,8 +1,3 @@
-"""
-Genetic algorithm that solves an equation
-# TODO: tweak it so it can solve multiple problems
-"""
-
 import numpy as np
 
 class GeneticAlgorithm():
