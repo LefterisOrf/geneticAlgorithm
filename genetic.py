@@ -35,7 +35,7 @@ class GeneticAlgorithm():
         sollutionFound = False
         population = []
         generation = 0
-
+        np.random.seed(None)
         # Initialize the first population and calculate each candidate's score
         for i in range(self.populationSize):
             candidate = np.random.randint(self.minVal, self.maxVal, size = self.geneSize)
@@ -66,6 +66,7 @@ class GeneticAlgorithm():
             # Generate the new population
             newPopulation = []
             generation += 1
+            print("In parent selection:")
             for i in range(self.populationSize // 2):
                 # Take two random numbers at [0, 1]
                 m = np.random.rand()
@@ -75,15 +76,16 @@ class GeneticAlgorithm():
                 # print("m: ", m," n: ",n)
                 # Determine to which candidate each number coresponds to
                 for c in range(self.populationSize):
-                    if m <= propabilities[c]:
+                    if m <= propabilities[c] and mParent == -1:
                         mParent = c
-                    if n <= propabilities[c]:
+                    if n <= propabilities[c] and nParent == -1:
                         nParent = c
                     if nParent != -1 and mParent != -1:
                         break
                 if mParent == -1 or nParent == -1:
                     print("Parent not found correctly.")
                     return None
+                print(" Parents selected: ", mParent, nParent)
                 # Create the child from m and n, depending on the mask
                 child1 = []
                 child2 = []
