@@ -30,6 +30,10 @@ class GeneticAlgorithm():
         self.mutationRate = mutationRate
         self.minVal = minVal
         self.maxVal = maxVal
+        if minVal == 0.0 and maxVal == 1.0:
+            self.genFunction = np.random.uniform
+        else:
+            self.genFunction = np.random.randint
 
     def run(self, maxGenerations = 12000):
         sollutionFound = False
@@ -38,7 +42,7 @@ class GeneticAlgorithm():
         np.random.seed(None)
         # Initialize the first population and calculate each candidate's score
         for i in range(self.populationSize):
-            candidate = np.random.randint(self.minVal, self.maxVal, size = self.geneSize)
+            candidate = self.genFunction(self.minVal, self.maxVal, size = self.geneSize)
             population.append(candidate)
 
         while (not sollutionFound) and (generation < maxGenerations):
@@ -66,7 +70,7 @@ class GeneticAlgorithm():
             # Generate the new population
             newPopulation = []
             generation += 1
-            print("In parent selection:")
+            #print("In parent selection:")
             for i in range(self.populationSize // 2):
                 # Take two random numbers at [0, 1]
                 m = np.random.rand()
@@ -85,7 +89,7 @@ class GeneticAlgorithm():
                 if mParent == -1 or nParent == -1:
                     print("Parent not found correctly.")
                     return None
-                print(" Parents selected: ", mParent, nParent)
+                #print(" Parents selected: ", mParent, nParent)
                 # Create the child from m and n, depending on the mask
                 child1 = []
                 child2 = []
@@ -104,18 +108,26 @@ class GeneticAlgorithm():
             for c in range(int(attributeCount * self.mutationRate)):
                 index = np.random.randint(0, self.populationSize)
                 candIndex = np.random.randint(0, self.geneSize)
-                value = np.random.randint(self.minVal, self.maxVal)
+                value = self.genFunction(self.minVal, self.maxVal)
                 # change a random number of a candidate
                 population[index][candIndex] = value
             # New population is finished. Now we need to repeat the process
-
+        print("Failed to find an optimal sollution")
+        # Find best available sollution
+        finalScores = []
+        for i in population:
+            finalScores.append(self.scoringFunction(i))
+        indexMax = np.argmax(finalScores)
+        bestSollution = population[indexMax]
+        print("Best available sollution: ", bestSollution)
+        print("Best sollution's result: ", bestSollution[0] + 2 * bestSollution[1] + 3 * bestSollution[2] + 4 * bestSollution[3])
 def errorCalc(candidate):
     # calculate the |f(a,b,c,d)|
-    f = abs(candidate[0] + 2 * candidate[1] + 3 * candidate[2] + 4 * candidate[3] - 30)
+    f = abs(candidate[0] + 2 * candidate[1] + 3 * candidate[2] + 4 * candidate[3] - 9)
     return 1 / (1 + f)
 
 def main():
-    genAlg = GeneticAlgorithm(10, 4, [1, 0, 1, 0], errorCalc, 0.1, -200, 400)
+    genAlg = GeneticAlgorithm(100, 4, [1, 0, 1, 0], errorCalc, 0.1, 0.0, 1.0)
     genAlg.run()
 
 if __name__ == '__main__':
