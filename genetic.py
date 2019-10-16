@@ -3,7 +3,7 @@ import numpy as np
 class GeneticAlgorithm():
     """
         A class that solves a one dimensional problem using a genetic algorithm.
-        Takes as arguments on creation the following:
+        Takes the following arguments on creation:
         - populationSize: The population number (e.g. 100 possible sollutions in each gen)
         - geneSize: The number of genes each possible sollution has
         - generations: The max number of generations to run. Given as argument in run()
